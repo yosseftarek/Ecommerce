@@ -21,7 +21,7 @@ categoryRouter.post(
 
 categoryRouter.get(
   "/",
-  // auth(Object.values(systemRoles)),
+  auth(Object.values(systemRoles)),
   CC.getCategories
 );
 
