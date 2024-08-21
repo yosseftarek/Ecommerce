@@ -17,6 +17,7 @@ export const signup = {
         .required(),
       age: joi.number().integer().min(18).max(100).required(),
       address: joi.string().min(3).max(100).required(),
+      role: joi.string().regex(/^(user|admin|guest)$/).required(),
     })
     .required(),
 };
