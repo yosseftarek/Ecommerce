@@ -1,4 +1,3 @@
-import cartModel from "../../../db/models/cart.model.js";
 import productModel from "../../../db/models/product.model.js";
 import wishListModel from "../../../db/models/wishlist.model.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
@@ -45,9 +44,8 @@ export const removeWishList = asyncHandler(async (req, res, next) => {
         { $pull: { products: productId } },
         { new: true }
       );
-    }
-    else return next(new AppError("product is not in wishList", 404));
-  } 
+    } else return next(new AppError("product is not in wishList", 404));
+  }
 
   res.status(201).json({ message: "done" });
 });
