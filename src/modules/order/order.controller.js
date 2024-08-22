@@ -1,3 +1,4 @@
+import Stripe from "stripe";
 import cartModel from "../../../db/models/cart.model.js";
 import couponModel from "../../../db/models/coupon.model.js";
 import orderModel from "../../../db/models/order.model.js";
@@ -5,6 +6,7 @@ import productModel from "../../../db/models/product.model.js";
 import { sendEmail } from "../../service/sendEmail.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { AppError } from "../../utils/classError.js";
+import { payment } from "../../utils/payment.js";
 import { createInvoice } from "../../utils/pdf.js";
 
 //=============================== createorder =========================================
@@ -72,7 +74,7 @@ export const createOrder = asyncHandler(async (req, res, next) => {
   });
   req.data = {
     model: orderModel,
-    id:order._id,
+    id: order._id,
   };
   if (req.body?.coupon) {
     await couponModel.updateOne(
@@ -80,7 +82,7 @@ export const createOrder = asyncHandler(async (req, res, next) => {
       { $push: { usedBy: req.user._id } }
     );
   }
-  
+
   for (const product of order.products) {
     await productModel.updateOne(
       { _id: product.productId },
@@ -94,40 +96,74 @@ export const createOrder = asyncHandler(async (req, res, next) => {
     await cartModel.updateOne({ user: req.user._id }, { products: [] });
   }
 
-  const invoice = {
-    shipping: {
-      name: req.user.name,
-      address: req.user.address,
-      city: "Egypt",
-      state: "cairo",
-      country: "cairo",
-      postal_code: 94111,
-    },
-    items: order.products,
-    subtotal: order.subPrice,
-    paid: order.totalPrice,
-    invoice_nr: order._id,
-    date: order.createdAt,
-    coupon: req.body?.coupon?.amount || 0,
-  };
+  // const invoice = {
+  //   shipping: {
+  //     name: req.user.name,
+  //     address: req.user.address,
+  //     city: "Egypt",
+  //     state: "cairo",
+  //     country: "cairo",
+  //     postal_code: 94111,
+  //   },
+  //   items: order.products,
+  //   subtotal: order.subPrice,
+  //   paid: order.totalPrice,
+  //   invoice_nr: order._id,
+  //   date: order.createdAt,
+  //   coupon: req.body?.coupon?.amount || 0,
+  // };
 
-  await createInvoice(invoice, "invoice.pdf");
+  // await createInvoice(invoice, "invoice.pdf");
 
-  await sendEmail(
-    req.user.email,
-    "Order placed",
-    `Your order has been placed successfully`,
-    [
-      {
-        path: "invoice.pdf",
-        contentType: "application/pdf",
+  // await sendEmail(
+  //   req.user.email,
+  //   "Order placed",
+  //   `Your order has been placed successfully`,
+  //   [
+  //     {
+  //       path: "invoice.pdf",
+  //       contentType: "application/pdf",
+  //     },
+  //     {
+  //       path: "logo.jpg",
+  //       contentType: "image/jpg",
+  //     },
+  //   ]);
+
+  if (paymentMethod == "card") {
+    const stripe = new Stripe(process.env.stripe_secret);
+    if (req.body?.coupon) {
+      const coupon = await stripe.coupons.create({
+        percent_off: req.body.coupon.amount,
+        duration: "once",
+      });
+      req.body.couponId = coupon.id;
+    }
+    const session = await payment({
+      payment_method_types: ["card"],
+      mode: "payment",
+      customer_email: req.user.email,
+      metadata: {
+        orderId: order._id.toString(),
       },
-      {
-        path: "logo.jpg",
-        contentType: "image/jpg",
-      },
-    ]
-  );
+      success_url: `${req.protocol}://${req.headers.host}/orders/success/${order._id}`,
+      cancel_url: `${req.protocol}://${req.headers.host}/orders/cancel/${order._id}`,
+      line_items: order.products.map((product) => {
+        return {
+          price_data: {
+            currency: "egp",
+            product_data: {
+              name: product.title,
+            },
+            unit_amount: product.price * 100,
+          },
+          quantity: product.quantity,
+        };
+      }),
+      discounts: req.body?.coupon ? [{ coupon: req.body.couponId }] : [],
+    });
+    res.status(201).json({ message: "done", url: session.url, session });
+  }
   res.status(201).json({ message: "done", order });
 });
 
