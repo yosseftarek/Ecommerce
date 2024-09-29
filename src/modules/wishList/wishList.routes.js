@@ -11,14 +11,14 @@ const wishListRouter = express.Router({mergeParams:true});
 wishListRouter.post(
   "/",
   validation(WV.createWishList),
-  auth(Object.values(systemRoles.user)),
+  auth([systemRoles.user]),
   WC.createWishList
 );
 
 wishListRouter.put(
   "/",
   validation(WV.removeWishList),
-  auth(Object.values(systemRoles.user)),
+  auth([systemRoles.user]),
   WC.removeWishList
 );
 

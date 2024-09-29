@@ -52,14 +52,17 @@ export const createSubCategory = asyncHandler(async (req, res, next) => {
 });
 
 //=============================== updatesubCategory =========================================
-export const updatesubCategory = asyncHandler(async (req, res, next) => {
+export const updateSubCategory = asyncHandler(async (req, res, next) => {
   const { name } = req.body;
   const { id } = req.params;
   const subCategory = await subCategoryModel.findById(id);
   if (!subCategory) {
-    next(new AppError("subCategory not exist"));
+    next(new AppError("subCategory is not exist"));
   }
-
+  const category=await categoryModel.findById(subCategory.category)
+  if(!category){
+    next(new AppError("category is not exist"));
+  }
   if (name) {
     if (name.toLowerCase() === subCategory.name) {
       return next(new AppError("name should be different"));
@@ -79,7 +82,7 @@ export const updatesubCategory = asyncHandler(async (req, res, next) => {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
       req.file.path,
       {
-        folder: `Ecommerce/categories/${subCategory.customId}`,
+        folder: `Ecommerce/categories/${category.customId}/subCategories/${subCategory.customId}`,
       }
     );
     subCategory.image = { secure_url, public_id };

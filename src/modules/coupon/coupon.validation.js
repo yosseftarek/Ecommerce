@@ -9,7 +9,7 @@ export const createCoupon = {
       fromDate: joi.date()
         .required()
         .custom((value, helpers) => {
-          if (value < Date.now()) {
+          if (value <= Date.now()) {
             return helpers.message('"fromDate" must be today or a future date');
           }
           return value;

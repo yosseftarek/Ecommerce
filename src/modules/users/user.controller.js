@@ -8,10 +8,14 @@ import { customAlphabet } from "nanoid";
 
 //=============================== signUp =========================================
 export const signup = asyncHandler(async (req, res, next) => {
-  const { name, email, password, cPassword, phone, age, address, role } =req.body;
+  const { name, email, password, cPassword, phone, age, address, role } =
+    req.body;
 
   const userExist = await UserModel.findOne({ email: email?.toLowerCase() });
   userExist && next(new AppError("user already exist", 409));
+
+  const phoneExist = await UserModel.findOne({ phone });
+  phoneExist && next(new AppError("Phone already exist", 409));
 
   const token = jwt.sign({ email }, process.env.signatureToken, {
     expiresIn: "1h",
@@ -37,7 +41,7 @@ export const signup = asyncHandler(async (req, res, next) => {
     age,
     phone,
     address,
-    role
+    role,
   });
   const newUser = await user.save();
 
@@ -115,9 +119,10 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
 
   if (user.code !== code || code == "")
     return next(new AppError("invalid code", 400));
+  const hashed = bcrypt.hashSync(password, 8);
   await UserModel.updateOne(
     { email },
-    { code: "", passwordChangedAt: Date.now() }
+    { code: "", passwordChangedAt: Date.now(), password: hashed }
   );
 
   res.status(200).json({ message: "done" });

@@ -96,39 +96,39 @@ export const createOrder = asyncHandler(async (req, res, next) => {
     await cartModel.updateOne({ user: req.user._id }, { products: [] });
   }
 
-  // const invoice = {
-  //   shipping: {
-  //     name: req.user.name,
-  //     address: req.user.address,
-  //     city: "Egypt",
-  //     state: "cairo",
-  //     country: "cairo",
-  //     postal_code: 94111,
-  //   },
-  //   items: order.products,
-  //   subtotal: order.subPrice,
-  //   paid: order.totalPrice,
-  //   invoice_nr: order._id,
-  //   date: order.createdAt,
-  //   coupon: req.body?.coupon?.amount || 0,
-  // };
+  const invoice = {
+    shipping: {
+      name: req.user.name,
+      address: req.user.address,
+      city: "Egypt",
+      state: "cairo",
+      country: "cairo",
+      postal_code: 94111,
+    },
+    items: order.products,
+    subtotal: order.subPrice,
+    paid: order.totalPrice,
+    invoice_nr: order._id,
+    date: order.createdAt,
+    coupon: req.body?.coupon?.amount || 0,
+  };
 
-  // await createInvoice(invoice, "invoice.pdf");
+  await createInvoice(invoice, "invoice.pdf");
 
-  // await sendEmail(
-  //   req.user.email,
-  //   "Order placed",
-  //   `Your order has been placed successfully`,
-  //   [
-  //     {
-  //       path: "invoice.pdf",
-  //       contentType: "application/pdf",
-  //     },
-  //     {
-  //       path: "logo.jpg",
-  //       contentType: "image/jpg",
-  //     },
-  //   ]);
+  await sendEmail(
+    req.user.email,
+    "Order placed",
+    `Your order has been placed successfully`,
+    [
+      {
+        path: "invoice.pdf",
+        contentType: "application/pdf",
+      },
+      {
+        path: "logo.jpg",
+        contentType: "image/jpg",
+      },
+    ]);
 
   if (paymentMethod == "card") {
     const stripe = new Stripe(process.env.stripe_secret);

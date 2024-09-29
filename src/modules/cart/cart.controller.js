@@ -11,14 +11,12 @@ export const createCart = asyncHandler(async (req, res, next) => {
 
   const product = await productModel.findOne({
     _id: productId,
-    // stock: { $gte: quantity },
+    stock: { $gte: quantity },
   });
   if (!product) {
-    return next(new AppError("product not exist", 404));
+    return next(new AppError("product is not exist or out of stock", 404));
   }
-  if (product.stock < quantity) {
-    return next(new AppError("product is out of stock", 404));
-  }
+
   const cartExist = await cartModel.findOne({ user: req.user._id });
   if (!cartExist) {
     const cart = await cartModel.create({
@@ -51,7 +49,7 @@ export const createCart = asyncHandler(async (req, res, next) => {
   await cartExist.save();
   req.data = {
     model: cartModel,
-    id:cartExist._id,
+    id: cartExist._id,
   };
   return res.status(201).json({ message: "done", cart: cartExist });
 });
@@ -73,7 +71,7 @@ export const removeCart = asyncHandler(async (req, res, next) => {
   );
   req.data = {
     model: cartModel,
-    id:cartExist._id,
+    id: cartExist._id,
   };
   res.status(201).json({ message: "done", cart: cartExist });
 });
@@ -91,7 +89,17 @@ export const clearCart = asyncHandler(async (req, res, next) => {
   );
   req.data = {
     model: cartModel,
-    id:cartExist._id,
+    id: cartExist._id,
   };
   res.status(201).json({ message: "done", cart: cartExist });
+});
+
+//=============================== getCart =========================================
+export const getCart = asyncHandler(async (req, res, next) => {
+  const userId = req.user._id;
+  const products = await cartModel.findOne({ user: userId });
+  if(!products){
+    res.json({ message: "done", products:[] });
+  }
+  res.json({ message: "done", products });
 });

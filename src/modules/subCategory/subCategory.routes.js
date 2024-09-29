@@ -18,7 +18,7 @@ subCategoryRouter.post(
 
 subCategoryRouter.get(
   "/",
-  auth([systemRoles.admin]),
+  auth(Object.values(systemRoles)),
   SCC.getSubCategories
 );
 
@@ -27,7 +27,7 @@ subCategoryRouter.put(
   multerHost(validExtensions.image).single("image"),
   validation(SCV.updateSubCategorySchema),
   auth([systemRoles.admin]),
-  SCC.updatesubCategory
+  SCC.updateSubCategory
 );
 subCategoryRouter.delete("/:id", auth([systemRoles.admin]), SCC.deleteSubCategories);
 export default subCategoryRouter;

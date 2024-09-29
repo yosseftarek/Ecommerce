@@ -38,3 +38,37 @@ export const auth = (roles = []) => {
     next();
   });
 };
+
+
+export const authGraphQl = async(token,roles = []) => {
+    if (!token) {
+      throw new Error("token not exist")
+    }
+    if (!token.startsWith(process.env.bearerKey)) {
+      throw new Error("inValid bearer key")
+    }
+    const newToken = token.split(process.env.bearerKey)[1];
+    if (!newToken) {
+      throw new Error("invalid token")
+    }
+    const decoded = jwt.verify(newToken, process.env.signatureToken);
+    if (!decoded?.email) {
+      throw new Error("invalid token payload")
+    }
+    const user = await userModel.findOne({ email: decoded.email });
+    if (!user) {
+      throw new Error("user not exist")
+    }
+    //authorization
+    if (!roles.includes(user.role)) {
+        throw new AppError("yous don't have permission", 409);
+      }
+    if (parseInt(user?.passwordChangedAt?.getTime() / 1000) > decoded?.iat) {
+
+      throw new Error("token expired")
+    }
+
+    return user;
+
+  
+};

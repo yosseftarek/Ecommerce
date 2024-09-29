@@ -12,7 +12,8 @@ export const createProduct = {
     category: generalFiled.id.required(),
     description: joi.string(),
   }),
-  files: joi.object({
+  files: joi
+    .object({
       image: joi.array().items(generalFiled.file.required()).required(),
       coverImages: joi.array().items(generalFiled.file.required()).required(),
     })
@@ -35,8 +36,14 @@ export const updateProduct = {
     id: generalFiled.id.required(),
   }),
   files: joi.object({
-      image: joi.array().items(generalFiled.file),
-      coverImages: joi.array().items(generalFiled.file),
-    }),
+    image: joi.array().items(generalFiled.file),
+    coverImages: joi.array().items(generalFiled.file),
+  }),
   headers: generalFiled.headers.required(),
 };
+
+export const createPostValidation = joi.object({
+  title: joi.string().min(3).max(30),
+  category: generalFiled.id.required(),
+  description: joi.string(),
+});

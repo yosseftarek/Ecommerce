@@ -23,3 +23,7 @@ export const removeCart = {
 export const clearCart = {
   headers: generalFiled.headers.required(),
 };
+
+export const getCart = {
+  headers: generalFiled.headers.required(),
+};

@@ -4,12 +4,16 @@ import { GlobalErrorHandler } from "../src/utils/asyncHandler.js";
 import * as routers from "../src/modules/index.routes.js";
 import { deleteFromCloudinary } from "./utils/deleteFromCloudinary.js";
 import { deleteFromDataBase } from "./utils/deleteFromDataBase.js";
+import { createHandler } from "graphql-http/lib/use/express";
+
 import cors from "cors";
+import { produtSchema } from "./modules/product/graphql/schema.js";
+import playground from "graphql-playground-middleware-express";
+const expressPlayground = playground.default;
 
 export const initApp = (express, app) => {
-
   app.use(cors());
-  
+
   app.use((req, res, next) => {
     if (req.originalUrl == "/oders/webhook") {
       next();
@@ -35,6 +39,9 @@ export const initApp = (express, app) => {
   app.use("/orders", routers.orderRouter);
   app.use("/reviews", routers.reviewRouter);
   app.use("/wishList", routers.wishListRouter);
+
+  app.use("/graphql", createHandler({ schema: produtSchema }));
+  app.get("/playground", expressPlayground({ endpoint: "/graphql" }));
 
   //handle invalid URLs.
   app.use("*", (req, res, next) => {

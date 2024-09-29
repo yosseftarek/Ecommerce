@@ -28,4 +28,11 @@ cartRouter.put(
   auth([systemRoles.user]),
   CC.clearCart
 );
+
+cartRouter.get(
+  "/",
+  validation(CV.getCart),
+  auth([systemRoles.user]),
+  CC.getCart
+);
 export default cartRouter;

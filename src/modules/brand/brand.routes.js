@@ -29,7 +29,7 @@ brandRouter.delete(
 );
 brandRouter.get(
   "/",
-  auth([systemRoles.admin]),
+  auth(Object.values(systemRoles)),
   BC.getBrands
 );
 export default brandRouter;
