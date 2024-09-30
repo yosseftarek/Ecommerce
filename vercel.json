@@ -16,7 +16,7 @@
     "api/*": {
       "maxDuration": 10,
       "memory": 1024,
-      "maxRequestSize": "10mb" 
+      "maxRequestSize": "11mb" 
     }
   }
 }
