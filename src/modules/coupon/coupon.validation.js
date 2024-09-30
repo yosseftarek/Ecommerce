@@ -17,7 +17,7 @@ export const createCoupon = {
       toDate: joi.date().greater(joi.ref("fromDate")).required(),
     })
     .required(),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({allowUnknown:true}),
 };
 
 export const updateCoupon = {
@@ -27,5 +27,5 @@ export const updateCoupon = {
     fromDate: joi.date().greater(Date.now()),
     toDate: joi.date().greater(joi.ref("fromDate")),
   }),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({allowUnknown:true}),
 };
