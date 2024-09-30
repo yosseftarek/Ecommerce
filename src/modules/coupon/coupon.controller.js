@@ -40,13 +40,14 @@ export const updateCoupon = asyncHandler(async (req, res, next) => {
     { code, amount, fromDate, toDate },
     { new: true }
   );
+  if (!coupon) {
+    return next(new AppError("you do not have a permission", 409));
+  }
   req.data = {
     model: couponModel,
     id:coupon._id,
   };
-  if (!coupon) {
-    return next(new AppError("you do not have a permission", 409));
-  }
+  
   res.status(201).json({ message: "done", coupon });
 });
 
