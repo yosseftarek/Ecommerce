@@ -54,14 +54,17 @@ export const updateCoupon = asyncHandler(async (req, res, next) => {
 //=============================== deleteCoupon =========================================
 export const deleteCoupon = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-
+  const couponExist=await couponModel.findById(id)
+  if (!couponExist) {
+    return next(new AppError("coupon is not exist", 409));
+  }
   const coupon = await couponModel.findOneAndDelete({
     _id: id,
     createdBy: req.user._id,
   });
   
   if (!coupon) {
-    return next(new AppError("coupon is not exist or you do not have a permission", 409));
+    return next(new AppError("you do not have a permission", 409));
   }
   req.data = {
     model: couponModel,
