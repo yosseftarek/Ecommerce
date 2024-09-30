@@ -1,6 +1,5 @@
 import fs from "fs";
 import PDFDocument from "pdfkit";
-
 export async function createInvoice(invoice, path) {
   let doc = new PDFDocument({ size: "A4", margin: 50 });
 
@@ -15,7 +14,7 @@ export async function createInvoice(invoice, path) {
 
 function generateHeader(doc) {
   doc
-    .image("../../logo.jpg", 50, 45, { width: 50 })
+    .image("logo.jpg", 50, 45, { width: 50 })
     .fillColor("#444444")
     .fontSize(20)
     .text("ACME Inc.", 110, 57)

@@ -71,7 +71,7 @@ export const removeCart = asyncHandler(async (req, res, next) => {
   );
   req.data = {
     model: cartModel,
-    id: cartExist._id,
+    id: cartExist?._id,
   };
   res.status(201).json({ message: "done", cart: cartExist });
 });
