@@ -33,7 +33,7 @@ export const updateCoupon = asyncHandler(async (req, res, next) => {
   const { code, amount, fromDate, toDate } = req.body;
   const couponExist=await couponModel.findById(id)
   if (!couponExist) {
-    return next(new AppError("coupon is not exist or you do not have a permission", 409));
+    return next(new AppError("coupon is not exist", 409));
   }
   const coupon = await couponModel.findOneAndUpdate(
     { _id: id, createdBy: req.user._id },
@@ -45,7 +45,7 @@ export const updateCoupon = asyncHandler(async (req, res, next) => {
     id:coupon._id,
   };
   if (!coupon) {
-    return next(new AppError("coupon is not exist or you do not have a permission", 409));
+    return next(new AppError("you do not have a permission", 409));
   }
   res.status(201).json({ message: "done", coupon });
 });
