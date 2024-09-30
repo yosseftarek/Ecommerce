@@ -6,7 +6,8 @@ export const createCoupon = {
     .object({
       code: joi.string().min(3).max(30).required(),
       amount: joi.number().min(1).max(100).integer().required(),
-      fromDate: joi.date()
+      fromDate: joi
+        .date()
         .required()
         .custom((value, helpers) => {
           if (value <= Date.now()) {
@@ -17,7 +18,7 @@ export const createCoupon = {
       toDate: joi.date().greater(joi.ref("fromDate")).required(),
     })
     .required(),
-  headers: generalFiled.headers.required().options({allowUnknown:true}),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const updateCoupon = {
@@ -27,5 +28,8 @@ export const updateCoupon = {
     fromDate: joi.date().greater(Date.now()),
     toDate: joi.date().greater(joi.ref("fromDate")),
   }),
-  headers: generalFiled.headers.required().options({allowUnknown:true}),
+  params: joi.object({
+    id: generalFiled.id.required(),
+  }),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
