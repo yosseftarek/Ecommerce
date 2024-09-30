@@ -8,7 +8,7 @@ export const createBrand= {
     })
     .required(),
   file: generalFiled.file.required(),
-  header: generalFiled.headers.required(),
+  headers: generalFiled.headers.required(),
 };
 
 export const updateBrand= {
@@ -18,5 +18,5 @@ export const updateBrand= {
     })
     .required(),
   file: generalFiled.file,
-  header: generalFiled.headers.required(),
+  headers: generalFiled.headers.required(),
 };

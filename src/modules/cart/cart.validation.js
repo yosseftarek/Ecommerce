@@ -8,7 +8,7 @@ export const createCart = {
       quantity: joi.number().integer().required(),
     })
     .required(),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const removeCart = {
@@ -17,13 +17,13 @@ export const removeCart = {
       productId: generalFiled.id.required(),
     })
     .required(),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const clearCart = {
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const getCart = {
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };

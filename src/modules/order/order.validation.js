@@ -12,7 +12,7 @@ export const createOrder = {
       paymentMethod: joi.string().valid("card", "cash").required(),
     })
     .required(),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const cancelOrder = {
@@ -24,5 +24,5 @@ export const cancelOrder = {
   params: joi.object({
     id: generalFiled.id.required(),
   }),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };

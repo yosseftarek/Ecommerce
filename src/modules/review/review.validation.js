@@ -11,7 +11,7 @@ export const createReview = {
       productId: generalFiled.id.required(),
     })
     .required(),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const updateReview = {
@@ -25,7 +25,7 @@ export const updateReview = {
       productId: generalFiled.id.required(),
     })
     .required(),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const deleteReview = {

@@ -8,7 +8,7 @@ export const createCategory = {
     })
     .required(),
   file: generalFiled.file.required(),
-  // headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const updateCategory = {
@@ -18,5 +18,5 @@ export const updateCategory = {
     })
     .required(),
   file: generalFiled.file,
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };

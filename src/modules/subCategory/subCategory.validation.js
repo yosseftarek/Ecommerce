@@ -8,7 +8,7 @@ export const createSubCategorySchema = {
     })
     .required(),
   file: generalFiled.file.required(),
-  header: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
   params: joi.object({
     categoryId: generalFiled.id.required(),
   }),
@@ -21,5 +21,5 @@ export const updateSubCategorySchema = {
     })
     .required(),
   file: generalFiled.file,
-  header: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };

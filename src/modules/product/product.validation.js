@@ -18,7 +18,7 @@ export const createProduct = {
       coverImages: joi.array().items(generalFiled.file.required()).required(),
     })
     .required(),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const updateProduct = {
@@ -39,7 +39,7 @@ export const updateProduct = {
     image: joi.array().items(generalFiled.file),
     coverImages: joi.array().items(generalFiled.file),
   }),
-  headers: generalFiled.headers.required(),
+  headers: generalFiled.headers.required().options({ allowUnknown: true }),
 };
 
 export const createPostValidation = joi.object({
