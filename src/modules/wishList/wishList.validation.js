@@ -7,7 +7,7 @@ export const createWishList = {
       productId: generalFiled.id.required(),
     })
     .required(),
-  headers: generalFiled.headers.required().options({ allowUnknown: true }),
+  headers: generalFiled.headers.required(),
 };
 export const removeWishList = {
   params: joi
@@ -15,5 +15,9 @@ export const removeWishList = {
       productId: generalFiled.id.required(),
     })
     .required(),
-  headers: generalFiled.headers.required().options({ allowUnknown: true }),
+  headers: generalFiled.headers.required(),
+};
+
+export const getWishList = {
+  headers: generalFiled.headers.required(),
 };

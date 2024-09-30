@@ -49,3 +49,13 @@ export const removeWishList = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({ message: "done" });
 });
+
+//=============================== getWishList =========================================
+export const getWishList = asyncHandler(async (req, res, next) => {
+  const wishList = await wishListModel.find({ user: req.user._id }).populate({
+    path:"products",
+    select:"image title description coverImages"
+  });
+
+  res.status(201).json({ message: "done", wishList });
+});

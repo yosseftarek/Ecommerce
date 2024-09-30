@@ -80,7 +80,7 @@ export const updateReview = asyncHandler(async (req, res, next) => {
     createdBy: req.user._id,
     productId,
   });
-  if (reviewExist) {
+  if (!reviewExist) {
     return next(new AppError("you didn't review on this product", 404));
   }
 

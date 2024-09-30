@@ -22,4 +22,10 @@ wishListRouter.put(
   WC.removeWishList
 );
 
+wishListRouter.get(
+  "/",
+  validation(WV.getWishList),
+  auth([systemRoles.user]),
+  WC.getWishList
+);
 export default wishListRouter;
