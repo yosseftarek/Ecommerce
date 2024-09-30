@@ -31,7 +31,10 @@ export const createCoupon = asyncHandler(async (req, res, next) => {
 export const updateCoupon = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { code, amount, fromDate, toDate } = req.body;
-
+  const couponExist=await couponModel.findById(id)
+  if (!couponExist) {
+    return next(new AppError("coupon is not exist or you do not have a permission", 409));
+  }
   const coupon = await couponModel.findOneAndUpdate(
     { _id: id, createdBy: req.user._id },
     { code, amount, fromDate, toDate },
