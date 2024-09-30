@@ -124,10 +124,7 @@ export const createOrder = asyncHandler(async (req, res, next) => {
         path: "invoice.pdf",
         contentType: "application/pdf",
       },
-      {
-        path: "logo.jpg",
-        contentType: "image/jpg",
-      },
+      
     ]);
 
   if (paymentMethod == "card") {
