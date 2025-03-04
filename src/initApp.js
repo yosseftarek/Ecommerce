@@ -14,12 +14,13 @@ const expressPlayground = playground.default;
 export const initApp = (express, app) => {
   app.use(cors());
 
+  const jsonMiddleware = express.json(); 
   app.use((req, res, next) => {
-    if (req.originalUrl == "/oders/webhook") {
-      next();
-    } else {
-      express.json()(req, res, next);
-    }
+  if (req.originalUrl === "/orders/webhook") {
+    next();
+  } else {
+    jsonMiddleware(req, res, next); // Reuse the middleware for all other routes
+  }
   });
 
   app.get("/", (req, res) => {
